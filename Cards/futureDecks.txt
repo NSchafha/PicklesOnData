@@ -1,7 +1,7 @@
 Deck: Countries
 Group: Continents
-Options: Name, Capital, Flag, Location, 3 Major Cities, Languages
-Descriptions: Pop. Size. GDP/cap, Top foods, Top Sights
+Options: Name, Capital, Flag, Location
+Descriptions: Pop. Size. GDP/cap, Top foods, Top Sights, 3 Major Cities, Languages
 
 Deck: Clouds
 Group: None
