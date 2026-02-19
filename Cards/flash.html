@@ -190,7 +190,6 @@
                 .map(field => `<strong>${field}:</strong> ${cardData[field]}`)
                 .join("<br><br>");
 
-            // Show extra info only on the back
             if (!state.showingFront && ui.showInfoCheckbox.checked && state.currentDeck["extra-info"]) {
                 const extraHtml = state.currentDeck["extra-info"]
                     .map(field => `<em>${field}:</em> ${cardData[field]}`)
@@ -200,7 +199,6 @@
 
             ui.card.innerHTML = html;
 
-            // Update card class only (no front/back text)
             ui.card.className = state.showingFront ? "front" : "back";
 
             updateCounter();
