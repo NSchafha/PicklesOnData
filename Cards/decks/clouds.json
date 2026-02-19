@@ -1,0 +1,10 @@
+{
+    "deckName": "Basic Math",
+    "groups": ["Addition", "Multiplication"],
+    "options": ["question", "answer"],
+    "cards": [
+      { "group": "Addition", "question": "2 + 2", "answer": "4" },
+      { "group": "Multiplication", "question": "3 × 3", "answer": "9" }
+    ]
+}
+  

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Flashcards</title>
+    <style>
+        #card {
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 400px;
+            min-height: 100px;
+            cursor: pointer;
+            transition: box-shadow 0.2s ease;
+        }
+
+        #card.front {
+            box-shadow: 0 0 10px #4CAF50;
+        }
+
+        #card.back {
+            box-shadow: 0 0 10px #2196F3;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="../index.html">Home</a>
+
+    <h1>Flashcards</h1>
+
+    <label>Deck:</label><br>
+    <select id="deckSelect"></select>
+
+    <br><br>
+
+    <label>Face:</label><br>
+    <select id="faceSelect"></select>
+
+    <br><br>
+
+    <label>Back:</label><br>
+    <select id="backSelect" multiple size="5"></select>
+
+    <br><br>
+
+    <label>Group:</label>
+    <select id="groupSelect">
+        <option value="all">All</option>
+    </select>
+
+    <label>
+        <input type="checkbox" id="shuffleCheckbox">
+        Shuffle
+    </label>
+
+    <label>
+        <input type="checkbox" id="showInfoCheckbox">
+        Show Info
+    </label>
+
+    <label>
+        <input type="checkbox" id="loopCheckbox" checked>
+        Loop
+    </label>
+
+    <br><br><br>
+
+    <div id="card" class="front"></div>
+
+    <br><br>
+
+    <div id="counter">0 / 0</div>
+
+    <br>
+
+    <button onclick="previousCard()">Back</button>
+    <button onclick="nextCard()">Next</button>
+
+    <script>
+        const state = {
+            deckList: null,
+            currentDeck: null,
+            filteredCards: [],
+            currentCardIndex: 0,
+            showingFront: true,
+            backAllOption: null
+        };
+
+        const ui = {
+            deckSelect: document.getElementById("deckSelect"),
+            faceSelect: document.getElementById("faceSelect"),
+            backSelect: document.getElementById("backSelect"),
+            groupSelect: document.getElementById("groupSelect"),
+            shuffleCheckbox: document.getElementById("shuffleCheckbox"),
+            showInfoCheckbox: document.getElementById("showInfoCheckbox"),
+            loopCheckbox: document.getElementById("loopCheckbox"),
+            card: document.getElementById("card"),
+            counter: document.getElementById("counter")
+        };
+
+        async function init() {
+            const res = await fetch("decks.json");
+            const data = await res.json();
+            state.deckList = data.decks;
+
+            state.deckList.forEach((deck, index) => {
+                ui.deckSelect.add(new Option(deck.name, index));
+            });
+
+            loadDeck(0);
+        }
+
+        async function loadDeck(index) {
+            const res = await fetch(state.deckList[index].file);
+            const deckData = await res.json();
+            state.currentDeck = deckData;
+
+            ui.faceSelect.innerHTML = "";
+            ui.backSelect.innerHTML = "";
+            ui.groupSelect.innerHTML = "<option value='all'>All</option>";
+
+            state.backAllOption = new Option("All", "all");
+            state.backAllOption.selected = true;
+            ui.backSelect.add(state.backAllOption);
+
+            state.currentDeck.options.forEach((option, i) => {
+                const faceOption = new Option(option, option);
+                if (i === 0) faceOption.selected = true;
+                ui.faceSelect.add(faceOption);
+
+                ui.backSelect.add(new Option(option, option));
+            });
+
+            state.currentDeck.groups.forEach(group => {
+                ui.groupSelect.add(new Option(group, group));
+            });
+
+            updateFilteredCards();
+        }
+
+        function getSelectedValues(selectElement) {
+            return Array.from(selectElement.selectedOptions).map(o => o.value);
+        }
+
+        function updateFilteredCards() {
+            const selectedGroup = ui.groupSelect.value;
+            state.filteredCards = selectedGroup === "all"
+                ? [...state.currentDeck.cards]
+                : state.currentDeck.cards.filter(card => card.group === selectedGroup);
+
+            if (ui.shuffleCheckbox.checked) shuffle(state.filteredCards);
+
+            state.currentCardIndex = 0;
+            state.showingFront = true;
+
+            showCard();
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function updateCounter() {
+            const total = state.filteredCards.length;
+            const current = total ? state.currentCardIndex + 1 : 0;
+            ui.counter.innerText = `${current} / ${total}`;
+        }
+
+        function showCard() {
+            if (!state.filteredCards.length) {
+                ui.card.innerText = "No cards available.";
+                updateCounter();
+                return;
+            }
+
+            const cardData = state.filteredCards[state.currentCardIndex];
+            const faceField = ui.faceSelect.value;
+            const backFields = getSelectedValues(ui.backSelect);
+
+            const fieldsToShow = backFields.includes("all") || !backFields.length
+                ? state.currentDeck.options
+                : backFields;
+
+            let html = (state.showingFront ? [faceField] : fieldsToShow)
+                .map(field => `<strong>${field}:</strong> ${cardData[field]}`)
+                .join("<br><br>");
+
+            // Show extra info only on the back
+            if (!state.showingFront && ui.showInfoCheckbox.checked && state.currentDeck["extra-info"]) {
+                const extraHtml = state.currentDeck["extra-info"]
+                    .map(field => `<em>${field}:</em> ${cardData[field]}`)
+                    .join("<br>");
+                html += "<br><br>" + extraHtml;
+            }
+
+            ui.card.innerHTML = html;
+
+            // Update card class only (no front/back text)
+            ui.card.className = state.showingFront ? "front" : "back";
+
+            updateCounter();
+        }
+
+        function nextCard() {
+            if (!state.filteredCards.length) return;
+            if (!ui.loopCheckbox.checked && state.currentCardIndex === state.filteredCards.length - 1) return;
+
+            state.currentCardIndex = (state.currentCardIndex + 1) % state.filteredCards.length;
+            state.showingFront = true;
+            showCard();
+        }
+
+        function previousCard() {
+            if (!state.filteredCards.length) return;
+            if (!ui.loopCheckbox.checked && state.currentCardIndex === 0) return;
+
+            state.currentCardIndex = (state.currentCardIndex - 1 + state.filteredCards.length) % state.filteredCards.length;
+            state.showingFront = true;
+            showCard();
+        }
+
+        ui.card.addEventListener("click", () => {
+            state.showingFront = !state.showingFront;
+            showCard();
+        });
+
+        ui.deckSelect.addEventListener("change", () => loadDeck(ui.deckSelect.value));
+        ui.groupSelect.addEventListener("change", updateFilteredCards);
+        ui.shuffleCheckbox.addEventListener("change", updateFilteredCards);
+        ui.showInfoCheckbox.addEventListener("change", showCard);
+        ui.faceSelect.addEventListener("change", showCard);
+
+        ui.backSelect.addEventListener("change", () => {
+            const selected = getSelectedValues(ui.backSelect);
+            if (selected.includes("all") && selected.length > 1) {
+                state.backAllOption.selected = true;
+            } else if (!selected.includes("all")) {
+                state.backAllOption.selected = false;
+            }
+            showCard();
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (["SELECT"].includes(document.activeElement.tagName)) return;
+
+            if (e.code === "Space") {
+                e.preventDefault();
+                state.showingFront = !state.showingFront;
+                showCard();
+            }
+
+            if (e.code === "ArrowRight") nextCard();
+            if (e.code === "ArrowLeft") previousCard();
+        });
+
+        init();
+    </script>
+</body>
+
+</html>
