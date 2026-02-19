@@ -1,10 +1,136 @@
 {
-    "deckName": "Basic Math",
-    "groups": ["Addition", "Multiplication"],
-    "options": ["question", "answer"],
-    "cards": [
-      { "group": "Addition", "question": "2 + 2", "answer": "4" },
-      { "group": "Multiplication", "question": "3 × 3", "answer": "9" }
-    ]
+  "deckName": "Clouds",
+  "groups": ["common", "rare"],
+  "options": ["Name", "Appearance", "Location Sky", "Location World", "Associated Weather"],
+  "extra-info": ["Common Weather Occurrences"],
+  "cards": [
+    {
+      "group": "common",
+      "Name": "Cirrus",
+      "Appearance": "Thin, wispy, feathery",
+      "Location Sky": "High",
+      "Location World": "Worldwide",
+      "Associated Weather": "Fair weather, signals change",
+      "Common Weather Occurrences": "Sunny days, approaching fronts"
+    },
+    {
+      "group": "common",
+      "Name": "Cirrocumulus",
+      "Appearance": "Small, patchy white ripples",
+      "Location Sky": "High",
+      "Location World": "Worldwide",
+      "Associated Weather": "Generally fair, cold",
+      "Common Weather Occurrences": "Mackerel sky patterns"
+    },
+    {
+      "group": "common",
+      "Name": "Cirrostratus",
+      "Appearance": "Thin veil covering sky",
+      "Location Sky": "High",
+      "Location World": "Worldwide",
+      "Associated Weather": "Often precedes precipitation",
+      "Common Weather Occurrences": "Sun or moon halos"
+    },
+    {
+      "group": "common",
+      "Name": "Altocumulus",
+      "Appearance": "Fluffy, gray patches",
+      "Location Sky": "Mid",
+      "Location World": "Worldwide",
+      "Associated Weather": "Fair or unsettled",
+      "Common Weather Occurrences": "Ripple patterns, morning clouds"
+    },
+    {
+      "group": "common",
+      "Name": "Altostratus",
+      "Appearance": "Grayish, uniform layer",
+      "Location Sky": "Mid",
+      "Location World": "Worldwide",
+      "Associated Weather": "Cloudy with light rain/snow possible",
+      "Common Weather Occurrences": "Sun appears diffused"
+    },
+    {
+      "group": "common",
+      "Name": "Nimbostratus",
+      "Appearance": "Thick, dark gray sheet",
+      "Location Sky": "Low to mid",
+      "Location World": "Worldwide",
+      "Associated Weather": "Steady rain or snow",
+      "Common Weather Occurrences": "Continuous precipitation"
+    },
+    {
+      "group": "common",
+      "Name": "Stratus",
+      "Appearance": "Low, gray, flat layer",
+      "Location Sky": "Low",
+      "Location World": "Worldwide",
+      "Associated Weather": "Drizzle, mist",
+      "Common Weather Occurrences": "Foggy or overcast days"
+    },
+    {
+      "group": "common",
+      "Name": "Stratocumulus",
+      "Appearance": "Low, lumpy gray layer",
+      "Location Sky": "Low",
+      "Location World": "Worldwide",
+      "Associated Weather": "Light drizzle or fair",
+      "Common Weather Occurrences": "Large rounded clumps, scattered sunshine"
+    },
+    {
+      "group": "common",
+      "Name": "Cumulus",
+      "Appearance": "Puffy 'cotton ball' clouds",
+      "Location Sky": "Low",
+      "Location World": "Worldwide",
+      "Associated Weather": "Fair weather, sometimes showers",
+      "Common Weather Occurrences": "Sunny days with occasional rain"
+    },
+    {
+      "group": "common",
+      "Name": "Cumulonimbus",
+      "Appearance": "Towering, dense vertical cloud",
+      "Location Sky": "Low to very high",
+      "Location World": "Worldwide",
+      "Associated Weather": "Thunderstorms, heavy rain, hail",
+      "Common Weather Occurrences": "Storms, lightning, severe weather"
+    },
+    {
+      "group": "rare",
+      "Name": "Mammatus",
+      "Appearance": "Pouch-like, hanging formations",
+      "Location Sky": "Low to mid",
+      "Location World": "Worldwide",
+      "Associated Weather": "After thunderstorms",
+      "Common Weather Occurrences": "Storm clouds dissipating"
+    },
+    {
+      "group": "rare",
+      "Name": "Lenticular",
+      "Appearance": "Lens-shaped, smooth edges",
+      "Location Sky": "Mid to high",
+      "Location World": "Mountainous regions",
+      "Associated Weather": "Windy conditions",
+      "Common Weather Occurrences": "Stationary near mountains, often mistaken for UFOs"
+    },
+    {
+      "group": "rare",
+      "Name": "Noctilucent",
+      "Appearance": "Thin, glowing blue-white clouds",
+      "Location Sky": "Very high (mesosphere)",
+      "Location World": "Polar regions",
+      "Associated Weather": "Nighttime visibility only",
+      "Common Weather Occurrences": "Visible during summer twilight"
+    },
+    {
+      "group": "rare",
+      "Name": "Volutus",
+      "Appearance": "Rolling, tube-shaped",
+      "Location Sky": "Low",
+      "Location World": "Worldwide",
+      "Associated Weather": "Rare, pre-storm winds",
+      "Common Weather Occurrences": "Rare rolling cloud formations before thunderstorms"
+    }
+  ]
 }
+
   
