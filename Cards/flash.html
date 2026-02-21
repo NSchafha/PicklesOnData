@@ -5,15 +5,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashcards</title>
+
+    <!-- MathJax Setup -->
+    <script>
+        let MathJaxReady = false;
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                    MathJaxReady = true;
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.4;
+        }
+
         #card {
             border: 2px solid #333;
             border-radius: 8px;
             padding: 20px;
-            max-width: 400px;
-            min-height: 100px;
+            max-width: 500px;
+            max-height: 300px; /* set a reasonable max height */
+            min-height: 120px;
             cursor: pointer;
             transition: box-shadow 0.2s ease;
+            overflow-y: auto; /* allow vertical scrolling */
         }
 
         #card.front {
@@ -28,22 +51,18 @@
 
 <body>
     <a href="../index.html">Home</a>
-
     <h1>Flashcards</h1>
 
     <label>Deck:</label><br>
     <select id="deckSelect"></select>
-
     <br><br>
 
     <label>Face:</label><br>
     <select id="faceSelect"></select>
-
     <br><br>
 
     <label>Back:</label><br>
     <select id="backSelect" multiple size="5"></select>
-
     <br><br>
 
     <label>Group:</label>
@@ -52,18 +71,13 @@
     </select>
 
     <label>
-        <input type="checkbox" id="shuffleCheckbox">
-        Shuffle
+        <input type="checkbox" id="shuffleCheckbox"> Shuffle
     </label>
-
     <label>
-        <input type="checkbox" id="showInfoCheckbox">
-        Show Info
+        <input type="checkbox" id="showInfoCheckbox"> Show Info
     </label>
-
     <label>
-        <input type="checkbox" id="loopCheckbox" checked>
-        Loop
+        <input type="checkbox" id="loopCheckbox" checked> Loop
     </label>
 
     <br><br><br>
@@ -73,7 +87,6 @@
     <br><br>
 
     <div id="counter">0 / 0</div>
-
     <br>
 
     <button onclick="previousCard()">Back</button>
@@ -101,6 +114,7 @@
             counter: document.getElementById("counter")
         };
 
+        // Initialize decks
         async function init() {
             const res = await fetch("decks.json");
             const data = await res.json();
@@ -200,6 +214,11 @@
 
             ui.card.innerHTML = html;
 
+            // MathJax rendering
+            if (MathJaxReady) {
+                MathJax.typesetPromise([ui.card]).catch((err) => console.log(err.message));
+            }
+
             ui.card.className = state.showingFront ? "front" : "back";
 
             updateCounter();
@@ -223,6 +242,7 @@
             showCard();
         }
 
+        // Event listeners
         ui.card.addEventListener("click", () => {
             state.showingFront = !state.showingFront;
             showCard();

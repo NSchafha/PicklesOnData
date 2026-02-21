@@ -7,6 +7,10 @@
         {
             "name": "Countries in the UN",
             "file": "decks/countries.json"
+        },
+        {
+            "name": "Statistic Distributions",
+            "file": "decks/distributions.json"
         }
     ]
 }
