@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashcards</title>
 
-    <!-- MathJax Setup -->
     <script>
         let MathJaxReady = false;
         window.MathJax = {
@@ -114,7 +113,6 @@
             counter: document.getElementById("counter")
         };
 
-        // Initialize decks
         async function init() {
             const res = await fetch("decks.json");
             const data = await res.json();
@@ -214,7 +212,6 @@
 
             ui.card.innerHTML = html;
 
-            // MathJax rendering
             if (MathJaxReady) {
                 MathJax.typesetPromise([ui.card]).catch((err) => console.log(err.message));
             }
@@ -242,7 +239,6 @@
             showCard();
         }
 
-        // Event listeners
         ui.card.addEventListener("click", () => {
             state.showingFront = !state.showingFront;
             showCard();

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base Practice</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.4;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #f7f7f7;
+}
+#container { width: 100%; max-width: 400px; }
+h1 { margin-top: 0; }
+
+#game {
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 120px;
+    align-items: center;
+}
+
+.number { font-size: 28px; margin: 6px 0; text-align: center; word-break: break-word; }
+#question { margin-bottom: 20px; }
+#answer { min-height: 36px; visibility: hidden; }
+sub { font-size: 14px; }
+#controls { margin-top: 15px; }
+button { margin-right: 10px; }
+select { margin-bottom: 10px; }
+</style>
+</head>
+
+<body>
+<div id="container">
+    <a href="../index.html">Home</a>
+    <h1>Base Conversion Game</h1>
+
+    <label>Question Base:</label><br><select id="questionBase"></select><br>
+    <label>Answer Base:</label><br><select id="answerBase"></select><br>
+    <label>Number of Digits:</label><br><select id="digitCount"></select><br><br>
+
+    <div id="game">
+        <div id="question" class="number"></div>
+        <div id="answer" class="number"></div>
+    </div>
+
+    <div id="controls">
+        <button onclick="showAnswer()">Show Answer</button>
+        <button onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
+
+<script>
+const qBases = [2,3,4,5,6,7,8,9,10,12,16,60];
+const aBases = [2,4,8,10,16];
+const qBase = document.getElementById("questionBase"),
+      aBase = document.getElementById("answerBase"),
+      digitsSel = document.getElementById("digitCount"),
+      question = document.getElementById("question"),
+      answer = document.getElementById("answer");
+
+let current = 0, showing = false;
+
+function randNum(base, digits) {
+    let val = 0;
+    for(let i=0;i<digits;i++){
+        val = val*base + (i===0 ? Math.floor(Math.random()*(base-1))+1 : Math.floor(Math.random()*base));
+    }
+    return val;
+}
+
+function format(value, base) {
+    if(base===60) return value===0?"0":value.toString().split('').map(x=>x).join(':');
+    return value.toString(base).toUpperCase();
+}
+
+function getVal(sel) { return parseInt(sel.value); }
+
+function nextQuestion(){
+    const qb = getVal(qBase), ab = getVal(aBase), digits = getVal(digitsSel);
+    current = randNum(qb,digits);
+    question.innerHTML = `${format(current,qb)}<sub>${qb}</sub>`;
+    answer.innerHTML = ""; answer.style.visibility="hidden";
+    showing = false;
+}
+
+function showAnswer(){
+    if(showing) return;
+    answer.innerHTML = `${format(current,getVal(aBase))}<sub>${getVal(aBase)}</sub>`;
+    answer.style.visibility="visible";
+    showing=true;
+}
+
+qBases.forEach(b=>qBase.add(new Option(b,b)));
+aBases.forEach(b=>aBase.add(new Option(b,b))); aBase.value=10;
+for(let i=2;i<=10;i++) digitsSel.add(new Option(i,i));
+
+[qBase,aBase,digitsSel].forEach(sel=>sel.addEventListener("change",nextQuestion));
+document.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();showAnswer();}if(e.code==="ArrowRight")nextQuestion();});
+
+nextQuestion();
+</script>
+</body>
+</html>
