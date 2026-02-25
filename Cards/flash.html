@@ -24,18 +24,37 @@
         body {
             font-family: Arial, sans-serif;
             line-height: 1.4;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            background: #f7f7f7;
+            height: 1200px;
+        }
+
+        #container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        select, input[type="checkbox"] {
+            margin-bottom: 10px;
         }
 
         #card {
             border: 2px solid #333;
             border-radius: 8px;
             padding: 20px;
-            max-width: 500px;
-            max-height: 300px; /* set a reasonable max height */
-            min-height: 120px;
+            background: white;
+            width: 100%;
+            overflow-y: auto;
             cursor: pointer;
-            transition: box-shadow 0.2s ease;
-            overflow-y: auto; /* allow vertical scrolling */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         #card.front {
@@ -45,51 +64,63 @@
         #card.back {
             box-shadow: 0 0 10px #2196F3;
         }
+
+        #counter {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        #controls {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        button {
+            margin: 0 5px;
+        }
     </style>
 </head>
 
 <body>
-    <a href="../index.html">Home</a>
-    <h1>Flashcards</h1>
+    <div id="container">
+        <a href="../index.html">Home</a>
+        <h1>Flashcards</h1>
+    
+        <label>Deck:</label><br>
+        <select id="deckSelect"></select><br>
+    
+        <label>Face:</label><br>
+        <select id="faceSelect"></select><br>
+    
+        <label>Back:</label><br>
+        <select id="backSelect" multiple size="5"></select><br>
+    
+        <label>Group:</label><br>
+        <select id="groupSelect">
+            <option value="all">All</option>
+        </select><br>
+    
+        <label>
+            <input type="checkbox" id="shuffleCheckbox"> Shuffle
+        </label>
+        <label>
+            <input type="checkbox" id="showInfoCheckbox"> Show Info
+        </label>
+        <label>
+            <input type="checkbox" id="loopCheckbox" checked> Loop
+        </label>
+    
+        <br><br>
+    
+        <div id="controls">
+            <button onclick="previousCard()">Back</button>
+            <button onclick="nextCard()">Next</button>
+        </div>
 
-    <label>Deck:</label><br>
-    <select id="deckSelect"></select>
-    <br><br>
-
-    <label>Face:</label><br>
-    <select id="faceSelect"></select>
-    <br><br>
-
-    <label>Back:</label><br>
-    <select id="backSelect" multiple size="5"></select>
-    <br><br>
-
-    <label>Group:</label>
-    <select id="groupSelect">
-        <option value="all">All</option>
-    </select>
-
-    <label>
-        <input type="checkbox" id="shuffleCheckbox"> Shuffle
-    </label>
-    <label>
-        <input type="checkbox" id="showInfoCheckbox"> Show Info
-    </label>
-    <label>
-        <input type="checkbox" id="loopCheckbox" checked> Loop
-    </label>
-
-    <br><br><br>
-
-    <div id="card" class="front"></div>
-
-    <br><br>
-
-    <div id="counter">0 / 0</div>
-    <br>
-
-    <button onclick="previousCard()">Back</button>
-    <button onclick="nextCard()">Next</button>
+        <div id="counter">0 / 0</div>
+    
+        <div id="card" class="front"></div>
+    </div>
 
     <script>
         const state = {

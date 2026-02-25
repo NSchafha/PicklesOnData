@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Twenty-five</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.4;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #f7f7f7;
+}
+#container { width: 100%; max-width: 400px; }
+h1 { margin-top: 0; }
+
+#game {
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 120px;
+    align-items: center;
+}
+
+.number { font-size: 28px; margin: 6px 0; text-align: center; word-break: break-word; }
+#question { margin-bottom: 20px; }
+#answer { min-height: 36px; visibility: hidden; }
+#controls { margin-top: 15px; }
+button { margin-right: 10px; }
+select { margin-bottom: 10px; width: 100%; }
+</style>
+</head>
+
+<body>
+<div id="container">
+    <a href="../index.html">Home</a>
+    <h1>Twenty-five</h1>
+
+    <label>Number to go up to:</label><br>
+    <select id="maxNumber"></select><br>
+
+    <label>Operations:</label><br>
+    <select id="operations" multiple size="5">
+        <option value="table">Table</option>
+        <option value="cubed">Cubed (³)</option>
+        <option value="quartic">4th Power (⁴)</option>
+        <option value="quintic">5th Power (⁵)</option>
+        <option value="sextic">6th Power (⁶)</option>
+    </select><br>
+
+    <div id="game">
+        <div id="question" class="number"></div>
+        <div id="answer" class="number"></div>
+    </div>
+
+    <div id="controls">
+        <button onclick="showAnswer()">Show Answer</button>
+        <button onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
+
+<script>
+const maxSel = document.getElementById("maxNumber"),
+      opsSel = document.getElementById("operations"),
+      question = document.getElementById("question"),
+      answer = document.getElementById("answer");
+
+let currentOp = "", num1 = 0, num2 = 0, showing = false;
+
+for(let i=5;i<=25;i++) maxSel.add(new Option(i,i));
+maxSel.value = 12;
+
+function getSelectedOps(){
+    return Array.from(opsSel.selectedOptions).map(o => o.value);
+}
+
+function randInt(min,max){
+    return Math.floor(Math.random()*(max-min+1)) + min;
+}
+
+function nextQuestion(){
+    const maxNum = parseInt(maxSel.value);
+    const ops = getSelectedOps();
+
+    if(ops.length === 0){
+        question.innerHTML = "Select at least one operation";
+        answer.innerHTML = "";
+        answer.style.visibility="hidden";
+        return;
+    }
+
+    currentOp = ops[randInt(0, ops.length-1)];
+
+    if(currentOp==="table"){
+        num1 = randInt(2,maxNum);
+        num2 = randInt(2,maxNum);
+        question.innerHTML = `${num1} × ${num2}`;
+    } 
+    else {
+        num1 = randInt(2,maxNum);
+
+        if(currentOp==="cubed") {
+            question.innerHTML = `${num1}³`;
+        }
+        else if(currentOp==="quartic") {
+            question.innerHTML = `${num1}⁴`;
+        }
+        else if(currentOp==="quintic") {
+            question.innerHTML = `${num1}⁵`;
+        }
+        else if(currentOp==="sextic") {
+            question.innerHTML = `${num1}⁶`;
+        }
+    }
+
+    answer.innerHTML = "";
+    answer.style.visibility="hidden";
+    showing = false;
+}
+
+function showAnswer(){
+    if(showing) return;
+
+    let ans;
+
+    if(currentOp==="table"){
+        ans = num1 * num2;
+    } 
+    else if(currentOp==="cubed"){
+        ans = Math.pow(num1,3);
+    }
+    else if(currentOp==="quartic"){
+        ans = Math.pow(num1,4);
+    }
+    else if(currentOp==="quintic"){
+        ans = Math.pow(num1,5);
+    }
+    else if(currentOp==="sextic"){
+        ans = Math.pow(num1,6);
+    }
+
+    answer.innerHTML = ans;
+    answer.style.visibility="visible";
+    showing = true;
+}
+
+[maxSel, opsSel].forEach(sel => sel.addEventListener("change", nextQuestion));
+
+document.addEventListener("keydown", e=>{
+    if(e.code==="Space"){ 
+        e.preventDefault(); 
+        showAnswer(); 
+    }
+    if(e.code==="ArrowRight") nextQuestion();
+});
+
+nextQuestion();
+</script>
+</body>
+</html>
