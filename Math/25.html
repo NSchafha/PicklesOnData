@@ -47,12 +47,13 @@ select { margin-bottom: 10px; width: 100%; }
     <select id="maxNumber"></select><br>
 
     <label>Operations:</label><br>
-    <select id="operations" multiple size="5">
+    <select id="operations" multiple size="6">
         <option value="table">Table</option>
         <option value="cubed">Cubed (³)</option>
         <option value="quartic">4th Power (⁴)</option>
         <option value="quintic">5th Power (⁵)</option>
         <option value="sextic">6th Power (⁶)</option>
+        <option value="reciprocal">Reciprocal (1/x)</option>
     </select><br>
 
     <div id="game">
@@ -103,21 +104,25 @@ function nextQuestion(){
         num2 = randInt(2,maxNum);
         question.innerHTML = `${num1} × ${num2}`;
     } 
-    else {
+    else if(currentOp==="cubed") {
         num1 = randInt(2,maxNum);
-
-        if(currentOp==="cubed") {
-            question.innerHTML = `${num1}³`;
-        }
-        else if(currentOp==="quartic") {
-            question.innerHTML = `${num1}⁴`;
-        }
-        else if(currentOp==="quintic") {
-            question.innerHTML = `${num1}⁵`;
-        }
-        else if(currentOp==="sextic") {
-            question.innerHTML = `${num1}⁶`;
-        }
+        question.innerHTML = `${num1}³`;
+    }
+    else if(currentOp==="quartic") {
+        num1 = randInt(2,maxNum);
+        question.innerHTML = `${num1}⁴`;
+    }
+    else if(currentOp==="quintic") {
+        num1 = randInt(2,maxNum);
+        question.innerHTML = `${num1}⁵`;
+    }
+    else if(currentOp==="sextic") {
+        num1 = randInt(2,maxNum);
+        question.innerHTML = `${num1}⁶`;
+    }
+    else if(currentOp==="reciprocal") {
+        num1 = randInt(2,maxNum);
+        question.innerHTML = `1 ÷ ${num1}`;
     }
 
     answer.innerHTML = "";
@@ -144,6 +149,9 @@ function showAnswer(){
     }
     else if(currentOp==="sextic"){
         ans = Math.pow(num1,6);
+    }
+    else if(currentOp==="reciprocal"){
+        ans = (1/num1).toFixed(5);
     }
 
     answer.innerHTML = ans;
